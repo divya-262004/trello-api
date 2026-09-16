@@ -1,20 +1,23 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Button, Card, Flex, Input, Typography, Modal } from "antd";
+import { Button, Card, Flex, Input, Typography, Modal, message } from "antd";
 import { getBoards, createBoard } from "../services/trelloApi";
 import { useState, useEffect } from "react";
-import { message } from "antd";
 
 const BoardsPage = () => {
   const [boards, setBoards] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
   const [boardName, setBoardName] = useState("");
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     const fetchBoards = async () => {
-      const response = await getBoards();
+      try {
+        const response = await getBoards();
 
-      setBoards(response.data);
+        setBoards(response.data);
+      } catch (error) {
+        message.error("Failed to fecth boards");
+      }
     };
 
     fetchBoards();
@@ -26,7 +29,7 @@ const BoardsPage = () => {
     }
     try {
       await createBoard(boardName);
-      message.success("Created Board")
+      message.success("Created Board");
 
       setBoardName("");
       setModalOpen(false);
@@ -34,7 +37,7 @@ const BoardsPage = () => {
       const response = await getBoards();
       setBoards(response.data);
     } catch (error) {
-      console.log("Failed to create board", error);
+      message.error("Failed to create board");
     }
   }
   return (

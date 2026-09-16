@@ -20,7 +20,7 @@ const Card = ({ card }) => {
       const response = await getCheckLists(card.id);
       setChecklists(response.data);
     } catch (error) {
-      console.log("Failed to fetch checklists", error);
+      message.error("Failed to fetch checklists");
     }
   };
 
@@ -44,7 +44,7 @@ const Card = ({ card }) => {
 
       message.success("Checklist created");
     } catch (error) {
-      console.log("Failed to create checklist", error);
+      message.error("Failed to create checklist");
     }
   };
 
@@ -58,7 +58,7 @@ const Card = ({ card }) => {
 
       message.success("Checklist deleted");
     } catch (error) {
-      console.log("Failed to delete checklist", error);
+      message.error("Failed to delete checklist");
     }
   };
 

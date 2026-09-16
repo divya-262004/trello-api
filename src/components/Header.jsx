@@ -3,7 +3,7 @@ import trelloLogo from "../assets/trello-original-logo.svg";
 
 const Header = () => {
   return (
-    <Flex className="bg-blue-600 w-full h-16" gap="medium" align="center" >
+    <Flex className="bg-blue-800 w-full h-16" gap="medium" align="center" >
         
         <img src={trelloLogo}
          alt="Trello-logo"

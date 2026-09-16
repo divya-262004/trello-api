@@ -1,5 +1,10 @@
 import { useParams } from "react-router-dom";
-import { getLists, createList, deleteList, closeList } from "../services/trelloApi";
+import {
+  getLists,
+  createList,
+  deleteList,
+  closeList,
+} from "../services/trelloApi";
 import { useState, useEffect } from "react";
 import BoardList from "../components/BoardList";
 import { Button, Flex, message } from "antd";
@@ -12,8 +17,12 @@ const BoardPage = () => {
 
   useEffect(() => {
     const fetchLists = async () => {
-      const response = await getLists(boardId);
-      setLists(response.data);
+      try {
+        const response = await getLists(boardId);
+        setLists(response.data);
+      } catch (error) {
+        message.error("Failed to Fetch Lists");
+      }
     };
     fetchLists();
   }, [boardId]);
@@ -33,7 +42,7 @@ const BoardPage = () => {
 
       message.success("List Added");
     } catch (error) {
-      console.log("Failed to Create List", error);
+      message.error("Failed to Create List");
     }
   };
 
@@ -41,20 +50,18 @@ const BoardPage = () => {
     try {
       await closeList(listId);
       await deleteList(listId);
-      message.success("List Deleted")
+      message.success("List Deleted");
 
       setLists((prevLists) => prevLists.filter((list) => list.id !== listId));
     } catch (error) {
-      console.log("Failed to delete list", error);
-      
+      message.error("Failed to delete list");
     }
   };
   return (
-    
     <Flex
       gap="middle"
       wrap={false}
-      className="items-start overflow-x-auto pb-4 hide-scrollbar  !p-5 min-h-screen bg-blue-800"
+      className="items-start overflow-x-auto hide-scrollbar  !p-5 min-h-screen bg-blue-900"
     >
       {lists.map((list) => (
         <BoardList key={list.id} list={list} onDelete={handleDeleteList} />
@@ -98,7 +105,6 @@ const BoardPage = () => {
         </Button>
       )}
     </Flex>
-  
   );
 };
 
