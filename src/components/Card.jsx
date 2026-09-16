@@ -7,7 +7,7 @@ import {
 } from "../services/trelloApi";
 import Checklist from "./Checklist";
 
-const TrelloCard = ({ card }) => {
+const Card = ({ card }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [checklists, setChecklists] = useState([]);
@@ -126,5 +126,5 @@ const TrelloCard = ({ card }) => {
   );
 };
 
-export default TrelloCard;
+export default Card;
 
