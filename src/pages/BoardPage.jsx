@@ -1,19 +1,34 @@
 import { useParams } from "react-router-dom";
-import { getLists, createList, deleteList, closeList } from "../services/trelloApi";
+import {
+  getLists,
+  createList,
+  deleteList,
+  closeList,
+} from "../services/trelloApi";
 import { useState, useEffect } from "react";
 import BoardList from "../components/BoardList";
 import { Button, Flex, message } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { setLists, addList } from "../store/slices/listSlice";
 
 const BoardPage = () => {
   const { boardId } = useParams();
-  const [lists, setLists] = useState([]);
+
+  const dispatch = useDispatch();
+  const lists = useSelector((state) => state.lists[boardId] || []);
+
   const [isAddingList, setIsAddingList] = useState(false);
   const [listName, setListName] = useState("");
 
   useEffect(() => {
     const fetchLists = async () => {
       const response = await getLists(boardId);
-      setLists(response.data);
+      dispatch(
+        setLists({
+          boardId,
+          lists: response.data,
+        }),
+      );
     };
     fetchLists();
   }, [boardId]);
@@ -24,12 +39,12 @@ const BoardPage = () => {
     }
 
     try {
-      await createList(listName, boardId);
+      const response= await createList(listName, boardId);
       setListName("");
       setIsAddingList(false);
 
-      const response = await getLists(boardId);
-      setLists(response.data);
+      
+      dispatch(addList(response.data));
 
       message.success("List Added");
     } catch (error) {
@@ -41,16 +56,14 @@ const BoardPage = () => {
     try {
       await closeList(listId);
       await deleteList(listId);
-      message.success("List Deleted")
+      message.success("List Deleted");
 
       setLists((prevLists) => prevLists.filter((list) => list.id !== listId));
     } catch (error) {
       console.log("Failed to delete list", error);
-      
     }
   };
   return (
-    
     <Flex
       gap="middle"
       wrap={false}
@@ -98,7 +111,6 @@ const BoardPage = () => {
         </Button>
       )}
     </Flex>
-  
   );
 };
 
