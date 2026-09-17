@@ -44,8 +44,7 @@ const Checklist = ({ checklist, cardId, onDelete }) => {
 
   const handleToggleItem = async (item) => {
     try {
-      const newState =
-        item.state === "complete" ? "incomplete" : "complete";
+      const newState = item.state === "complete" ? "incomplete" : "complete";
 
       await updateCheckItem(cardId, item.id, newState);
 
@@ -72,21 +71,14 @@ const Checklist = ({ checklist, cardId, onDelete }) => {
   ).length;
 
   const progress =
-    items.length === 0
-      ? 0
-      : Math.round((completedItems / items.length) * 100);
+    items.length === 0 ? 0 : Math.round((completedItems / items.length) * 100);
 
   return (
     <div className="mb-4">
-     
       <div className="flex items-center justify-between">
         <p className="font-semibold">{checklist.name}</p>
 
-        <Button
-          type="text"
-          danger
-          onClick={() => onDelete(checklist.id)}
-        >
+        <Button type="text" danger onClick={() => onDelete(checklist.id)}>
           ✕
         </Button>
       </div>
@@ -119,16 +111,13 @@ const Checklist = ({ checklist, cardId, onDelete }) => {
 
               <span
                 className={
-                  item.state === "complete"
-                    ? "text-gray-400 line-through"
-                    : ""
+                  item.state === "complete" ? "text-gray-400 line-through" : ""
                 }
               >
                 {item.name}
               </span>
             </div>
 
-          
             <Button
               type="text"
               danger
@@ -167,9 +156,7 @@ const Checklist = ({ checklist, cardId, onDelete }) => {
             </div>
           </div>
         ) : (
-          <Button onClick={() => setIsAddingItem(true)}>
-            + Add an item
-          </Button>
+          <Button onClick={() => setIsAddingItem(true)}>+ Add an item</Button>
         )}
       </div>
     </div>
@@ -177,5 +164,3 @@ const Checklist = ({ checklist, cardId, onDelete }) => {
 };
 
 export default Checklist;
-
-

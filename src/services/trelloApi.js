@@ -54,15 +54,6 @@ export const createList=(listName, boardId)=>{
     })
 }
 
-export const deleteList=(listId)=>{
-    return axios.delete(`${baseUrl}/lists/${listId}`,{
-        params:{
-            key:apiKey,
-            token,
-        }
-    })
-}
-
 export const closeList = (listId) => {
   return axios.put(
     `${baseUrl}/lists/${listId}/closed`,

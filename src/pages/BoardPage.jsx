@@ -2,7 +2,6 @@ import { useParams } from "react-router-dom";
 import {
   getLists,
   createList,
-  deleteList,
   closeList,
 } from "../services/trelloApi";
 import { useState, useEffect } from "react";
@@ -49,7 +48,7 @@ const BoardPage = () => {
   const handleDeleteList = async (listId) => {
     try {
       await closeList(listId);
-      await deleteList(listId);
+     
       message.success("List Deleted");
 
       setLists((prevLists) => prevLists.filter((list) => list.id !== listId));
