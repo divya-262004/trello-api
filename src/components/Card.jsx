@@ -6,21 +6,28 @@ import {
   deleteChecklist,
 } from "../services/trelloApi";
 import Checklist from "./Checklist";
+import { setChecklists, addChecklist, removeChecklist } from "../store/slices/checklistSlice";
+import { useDispatch, useSelector } from "react-redux";
 
-const TrelloCard = ({ card }) => {
+const Card = ({ card }) => {
+  const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [checklists, setChecklists] = useState([]);
+  const checklists = useSelector((state) => state.checklists[card.id]);
   const [isAddingChecklist, setIsAddingChecklist] = useState(false);
   const [checklistName, setChecklistName] = useState("");
-
 
   const fetchChecklists = async () => {
     try {
       const response = await getCheckLists(card.id);
-      setChecklists(response.data);
+      dispatch(
+        setChecklists({
+          cardId: card.id,
+          checklists: response.data,
+        }),
+      );
     } catch (error) {
-      console.log("Failed to fetch checklists", error);
+      message.error("Failed to fetch checklists");
     }
   };
 
@@ -30,21 +37,23 @@ const TrelloCard = ({ card }) => {
     }
   }, [isModalOpen]);
 
-
   const handleCreateChecklist = async () => {
     if (!checklistName.trim()) return;
 
     try {
-      await createCheckList(card.id, checklistName);
+      const response=await createCheckList(card.id, checklistName);
 
-      await fetchChecklists();
+      dispatch(addChecklist({
+        cardId:card.id,
+        checklist:response.data
+      }))
 
       setChecklistName("");
       setIsAddingChecklist(false);
 
       message.success("Checklist created");
     } catch (error) {
-      console.log("Failed to create checklist", error);
+      message.error("Failed to create checklist");
     }
   };
 
@@ -52,19 +61,19 @@ const TrelloCard = ({ card }) => {
     try {
       await deleteChecklist(checklistId);
 
-      setChecklists((prev) =>
-        prev.filter((checklist) => checklist.id !== checklistId),
-      );
+      dispatch(removeChecklist({
+        cardId:card.id,
+        checklistId
+      }))
 
       message.success("Checklist deleted");
     } catch (error) {
-      console.log("Failed to delete checklist", error);
+      message.error("Failed to delete checklist");
     }
   };
 
   return (
     <>
-    
       <div
         className="cursor-pointer rounded-lg bg-white p-3 shadow-sm"
         onClick={() => setIsModalOpen(true)}
@@ -78,8 +87,7 @@ const TrelloCard = ({ card }) => {
         footer={null}
         onCancel={() => setIsModalOpen(false)}
       >
-    
-        {checklists.map((checklist) => (
+        {(checklists || []).map((checklist) => (
           <Checklist
             key={checklist.id}
             checklist={checklist}
@@ -99,10 +107,7 @@ const TrelloCard = ({ card }) => {
             />
 
             <div className="flex gap-3">
-              <Button
-                type="primary"
-                onClick={handleCreateChecklist}
-              >
+              <Button type="primary" onClick={handleCreateChecklist}>
                 Add
               </Button>
 
@@ -126,5 +131,4 @@ const TrelloCard = ({ card }) => {
   );
 };
 
-export default TrelloCard;
-
+export default Card;

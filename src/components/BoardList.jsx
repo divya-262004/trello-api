@@ -17,7 +17,7 @@ const BoardList = ({ list, onDelete }) => {
       const response = await getCards(list.id);
       setCards(response.data);
     } catch (error) {
-      console.log("Failed to fetch cards", error);
+      message.error("Failed to fetch cards");
     }
   };
 
@@ -38,7 +38,7 @@ const BoardList = ({ list, onDelete }) => {
 
       message.success("Card added");
     } catch (error) {
-      console.log("Failed to create card", error);
+      message.error("Failed to create card");
     }
   };
 

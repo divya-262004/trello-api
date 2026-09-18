@@ -2,9 +2,10 @@ import axios from "axios";
 
 const apiKey=import.meta.env.VITE_TRELLO_API_KEY;
 const token=import.meta.env.VITE_TRELLO_TOKEN;
+const baseUrl=import.meta.env.VITE_TRELLO_URL;
 
 export const getBoards=()=>{
-    return axios.get("https://api.trello.com/1/members/me/boards",{
+    return axios.get(`${baseUrl}/members/me/boards`,{
         params:{
             key:apiKey,
             token,
@@ -13,7 +14,7 @@ export const getBoards=()=>{
 }
 
 export const createBoard=(boardName)=>{
-    return axios.post("https://api.trello.com/1/boards", null,{
+    return axios.post(`${baseUrl}/boards`, null,{
         params:{
             name:boardName,
             key:apiKey,
@@ -23,7 +24,7 @@ export const createBoard=(boardName)=>{
 }
 
 export const getLists=(boardId)=>{
-    return axios.get(`https://api.trello.com/1/boards/${boardId}/lists`,{
+    return axios.get(`${baseUrl}/boards/${boardId}/lists`,{
         params:{
             key:apiKey,
             token,
@@ -33,7 +34,7 @@ export const getLists=(boardId)=>{
 }
 
 export const getCards=(listId)=>{
-    return axios.get(`https://api.trello.com/1/lists/${listId}/cards`,{
+    return axios.get(`${baseUrl}/lists/${listId}/cards`,{
         params:{
             key:apiKey,
             token,
@@ -42,7 +43,7 @@ export const getCards=(listId)=>{
 }
 
 export const createList=(listName, boardId)=>{
-    return axios.post("https://api.trello.com/1/lists", null,{
+    return axios.post(`${baseUrl}/lists`, null,{
         params:{
             name:listName,
             idBoard:boardId,
@@ -53,18 +54,9 @@ export const createList=(listName, boardId)=>{
     })
 }
 
-export const deleteList=(listId)=>{
-    return axios.delete(`https://api.trello.com/1/lists/${listId}`,{
-        params:{
-            key:apiKey,
-            token,
-        }
-    })
-}
-
 export const closeList = (listId) => {
   return axios.put(
-    `https://api.trello.com/1/lists/${listId}/closed`,
+    `${baseUrl}/lists/${listId}/closed`,
     null,
     {
       params: {
@@ -77,7 +69,7 @@ export const closeList = (listId) => {
 };
 
 export const createCard=(listId, cardName)=>{
-    return axios.post(`https://api.trello.com/1/cards`, null,{
+    return axios.post(`${baseUrl}/cards`, null,{
         params:{
             name:cardName,
             idList:listId,
@@ -89,7 +81,7 @@ export const createCard=(listId, cardName)=>{
 }
 
 export const createCheckList=(cardId, checkListName)=>{
-    return axios.post("https://api.trello.com/1/checklists",null,{
+    return axios.post(`${baseUrl}/checklists`,null,{
         params:{
            
             idCard:cardId,
@@ -103,7 +95,7 @@ export const createCheckList=(cardId, checkListName)=>{
 
 export const getCheckLists = (cardId) => {
   return axios.get(
-    `https://api.trello.com/1/cards/${cardId}/checklists`,
+    `${baseUrl}/cards/${cardId}/checklists`,
     {
       params: {
         key: apiKey,
@@ -115,7 +107,7 @@ export const getCheckLists = (cardId) => {
 
 export const deleteChecklist = (checklistId) => {
   return axios.delete(
-    `https://api.trello.com/1/checklists/${checklistId}`,
+    `${baseUrl}/checklists/${checklistId}`,
     {
       params: {
         key: apiKey,
@@ -127,7 +119,7 @@ export const deleteChecklist = (checklistId) => {
 
 export const getCheckItems = (checklistId) => {
   return axios.get(
-    `https://api.trello.com/1/checklists/${checklistId}/checkItems`,
+    `${baseUrl}/checklists/${checklistId}/checkItems`,
     {
       params: {
         key: apiKey,
@@ -139,7 +131,7 @@ export const getCheckItems = (checklistId) => {
 
 export const createCheckItem = (checklistId, itemName) => {
   return axios.post(
-    `https://api.trello.com/1/checklists/${checklistId}/checkItems`,
+    `${baseUrl}/checklists/${checklistId}/checkItems`,
     null,
     {
       params: {
@@ -154,7 +146,7 @@ export const createCheckItem = (checklistId, itemName) => {
 
 export const updateCheckItem = (cardId, itemId, state) => {
   return axios.put(
-    `https://api.trello.com/1/cards/${cardId}/checkItem/${itemId}`,
+    `${baseUrl}/cards/${cardId}/checkItem/${itemId}`,
     null,
     {
       params: {
@@ -168,7 +160,7 @@ export const updateCheckItem = (cardId, itemId, state) => {
 
 export const deleteCheckItem = (checklistId, itemId) => {
   return axios.delete(
-    `https://api.trello.com/1/checklists/${checklistId}/checkItems/${itemId}`,
+    `${baseUrl}/checklists/${checklistId}/checkItems/${itemId}`,
     {
       params: {
         key: apiKey,

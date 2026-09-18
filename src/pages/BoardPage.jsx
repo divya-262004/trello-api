@@ -2,34 +2,38 @@ import { useParams } from "react-router-dom";
 import {
   getLists,
   createList,
-  deleteList,
   closeList,
 } from "../services/trelloApi";
 import { useState, useEffect } from "react";
 import BoardList from "../components/BoardList";
-import { Button, Flex, message } from "antd";
+import { Button, Flex, message, Input } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { setLists, addList } from "../store/slices/listSlice";
+import { setLists, addList, removeList } from "../store/slices/listSlice";
 
 const BoardPage = () => {
   const { boardId } = useParams();
 
   const dispatch = useDispatch();
-  const lists = useSelector((state) => state.lists[boardId] || []);
+  const lists = useSelector((state) => state.lists[boardId]);
 
   const [isAddingList, setIsAddingList] = useState(false);
   const [listName, setListName] = useState("");
 
   useEffect(() => {
     const fetchLists = async () => {
-      const response = await getLists(boardId);
+      try{
+        const response = await getLists(boardId);
       dispatch(
         setLists({
           boardId,
           lists: response.data,
         }),
       );
-    };
+    }catch(error){
+      message.error("Failed to fetch lists");
+    }
+      }
+      
     fetchLists();
   }, [boardId]);
 
@@ -44,23 +48,29 @@ const BoardPage = () => {
       setIsAddingList(false);
 
       
-      dispatch(addList(response.data));
+      dispatch(addList({
+        boardId,
+        list:response.data}));
 
       message.success("List Added");
     } catch (error) {
-      console.log("Failed to Create List", error);
+      message.error("Failed to Create List");
     }
   };
 
   const handleDeleteList = async (listId) => {
     try {
       await closeList(listId);
-      await deleteList(listId);
+   
       message.success("List Deleted");
 
-      setLists((prevLists) => prevLists.filter((list) => list.id !== listId));
+      dispatch(removeList({
+        boardId,
+        listId
+      }))
+
     } catch (error) {
-      console.log("Failed to delete list", error);
+      message.error("Failed to delete list");
     }
   };
   return (
@@ -69,18 +79,19 @@ const BoardPage = () => {
       wrap={false}
       className="items-start overflow-x-auto pb-4 hide-scrollbar  !p-5 min-h-screen bg-blue-800"
     >
-      {lists.map((list) => (
+      {(lists||[]).map((list) => (
         <BoardList key={list.id} list={list} onDelete={handleDeleteList} />
       ))}
 
       {isAddingList ? (
         <div className="!w-60 shrink-0">
-          <input
+          <Input
             value={listName}
             onChange={(e) => setListName(e.target.value)}
             placeholder="Enter list title..."
             className="w-full rounded-md border p-2"
             autoFocus
+            onPressEnter={handleCreateList}
           />
 
           <div className="mt-2 flex gap-2">
@@ -106,6 +117,7 @@ const BoardPage = () => {
          font-semibold
           !bg-gray-400"
           onClick={() => setIsAddingList(true)}
+          
         >
           + Add another list
         </Button>

@@ -6,6 +6,7 @@ import { setBoards, addBoard } from "../store/slices/boardSlice";
 
 import { useSelector, useDispatch } from "react-redux";
 
+
 const BoardsPage = () => {
 
   const dispatch=useDispatch();
@@ -16,11 +17,20 @@ const BoardsPage = () => {
   const navigate = useNavigate();
   
   useEffect(() => {
-    const fetchBoards = async () => {
+    
+      const fetchBoards = async () => {
+    try{
       const response = await getBoards();
 
       dispatch(setBoards(response.data));
-    };
+    }
+    
+
+    catch(error){
+      message.error("Failed to fetxh boards");
+    }
+  }
+    
 
     fetchBoards();
   }, []);
@@ -39,7 +49,7 @@ const BoardsPage = () => {
       
       dispatch(addBoard(response.data));
     } catch (error) {
-      console.log("Failed to create board", error);
+      message.error("Failed to create board");
     }
   }
   return (

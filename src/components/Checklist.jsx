@@ -6,18 +6,29 @@ import {
   updateCheckItem,
   deleteCheckItem,
 } from "../services/trelloApi";
+import { useDispatch, useSelector } from "react-redux";
+import { setItems, addItem, updateItem, removeItem } from "../store/slices/checkItemSlice";
 
 const Checklist = ({ checklist, cardId, onDelete }) => {
-  const [items, setItems] = useState([]);
+  const dispatch = useDispatch();
+
+  const items = useSelector((state) => state.items[checklist.id]) || [];
+
   const [isAddingItem, setIsAddingItem] = useState(false);
   const [itemName, setItemName] = useState("");
 
   const fetchItems = async () => {
     try {
       const response = await getCheckItems(checklist.id);
-      setItems(response.data);
+      dispatch(
+        setItems({
+          checklistId: checklist.id,
+          items: response.data,
+        }),
+      );
     } catch (error) {
-      console.log("Failed to fetch checklist items", error);
+      console.error("FETCH ITEMS ERROR:", error);
+      message.error("Failed to fetch checklist items");
     }
   };
 
@@ -29,29 +40,35 @@ const Checklist = ({ checklist, cardId, onDelete }) => {
     if (!itemName.trim()) return;
 
     try {
-      await createCheckItem(checklist.id, itemName);
+      const response=await createCheckItem(checklist.id, itemName);
 
-      await fetchItems();
+      dispatch(addItem({
+        checklistId:checklist.id,
+        item:response.data
+      }))
 
       setItemName("");
       setIsAddingItem(false);
 
       message.success("Item added");
     } catch (error) {
-      console.log("Failed to create checklist item", error);
+      message.error("Failed to create checklist item");
     }
   };
 
   const handleToggleItem = async (item) => {
     try {
-      const newState =
-        item.state === "complete" ? "incomplete" : "complete";
+      const newState = item.state === "complete" ? "incomplete" : "complete";
 
       await updateCheckItem(cardId, item.id, newState);
 
-      await fetchItems();
+      dispatch(updateItem({
+        checklistId:checklist.id,
+        itemId:item.id,
+        state:newState,
+      }))
     } catch (error) {
-      console.log("Failed to update checklist item", error);
+      message.error("Failed to update checklist item");
     }
   };
 
@@ -59,11 +76,14 @@ const Checklist = ({ checklist, cardId, onDelete }) => {
     try {
       await deleteCheckItem(checklist.id, itemId);
 
-      await fetchItems();
+      dispatch(removeItem({
+        checklistId:checklist.id,
+        itemId
+      }))
 
       message.success("Item deleted");
     } catch (error) {
-      console.log("Failed to delete checklist item", error);
+      message.error("Failed to delete checklist item");
     }
   };
 
@@ -72,21 +92,14 @@ const Checklist = ({ checklist, cardId, onDelete }) => {
   ).length;
 
   const progress =
-    items.length === 0
-      ? 0
-      : Math.round((completedItems / items.length) * 100);
+    items.length === 0 ? 0 : Math.round((completedItems / items.length) * 100);
 
   return (
     <div className="mb-4">
-     
       <div className="flex items-center justify-between">
         <p className="font-semibold">{checklist.name}</p>
 
-        <Button
-          type="text"
-          danger
-          onClick={() => onDelete(checklist.id)}
-        >
+        <Button type="text" danger onClick={() => onDelete(checklist.id)}>
           ✕
         </Button>
       </div>
@@ -119,16 +132,13 @@ const Checklist = ({ checklist, cardId, onDelete }) => {
 
               <span
                 className={
-                  item.state === "complete"
-                    ? "text-gray-400 line-through"
-                    : ""
+                  item.state === "complete" ? "text-gray-400 line-through" : ""
                 }
               >
                 {item.name}
               </span>
             </div>
 
-          
             <Button
               type="text"
               danger
@@ -167,9 +177,7 @@ const Checklist = ({ checklist, cardId, onDelete }) => {
             </div>
           </div>
         ) : (
-          <Button onClick={() => setIsAddingItem(true)}>
-            + Add an item
-          </Button>
+          <Button onClick={() => setIsAddingItem(true)}>+ Add an item</Button>
         )}
       </div>
     </div>
@@ -177,5 +185,3 @@ const Checklist = ({ checklist, cardId, onDelete }) => {
 };
 
 export default Checklist;
-
-
