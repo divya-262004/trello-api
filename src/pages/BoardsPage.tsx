@@ -5,12 +5,13 @@ import { useState, useEffect } from "react";
 import { setBoards, addBoard } from "../store/slices/boardSlice";
 
 import { useSelector, useDispatch } from "react-redux";
+import type { RootState, AppDispatch } from "../store/store";
 
 
 const BoardsPage = () => {
 
-  const dispatch=useDispatch();
-  const boards=useSelector((state)=>state.boards);
+  const dispatch:AppDispatch=useDispatch();
+  const boards=useSelector((state:RootState)=>state.boards);
 
   const [isModalOpen, setModalOpen] = useState(false);
   const [boardName, setBoardName] = useState("");

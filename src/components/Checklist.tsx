@@ -9,10 +9,17 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { setItems, addItem, updateItem, removeItem } from "../store/slices/checkItemSlice";
 
-const Checklist = ({ checklist, cardId, onDelete }) => {
-  const dispatch = useDispatch();
+import type { TrelloChecklist, TrelloCheckItem } from "../types";
+import type { RootState, AppDispatch } from "../store/store";
 
-  const items = useSelector((state) => state.items[checklist.id]) || [];
+const Checklist = ({ checklist, cardId, onDelete }:{
+  checklist:TrelloChecklist;
+  cardId:string;
+  onDelete:(checklistId:string) =>void
+}) => {
+  const dispatch :AppDispatch= useDispatch();
+
+  const items = useSelector((state:RootState) => state.items[checklist.id]) || [];
 
   const [isAddingItem, setIsAddingItem] = useState(false);
   const [itemName, setItemName] = useState("");
@@ -56,7 +63,7 @@ const Checklist = ({ checklist, cardId, onDelete }) => {
     }
   };
 
-  const handleToggleItem = async (item) => {
+  const handleToggleItem = async (item:TrelloCheckItem) => {
     try {
       const newState = item.state === "complete" ? "incomplete" : "complete";
 
@@ -72,7 +79,7 @@ const Checklist = ({ checklist, cardId, onDelete }) => {
     }
   };
 
-  const handleDeleteItem = async (itemId) => {
+  const handleDeleteItem = async (itemId:string) => {
     try {
       await deleteCheckItem(checklist.id, itemId);
 

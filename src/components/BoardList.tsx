@@ -5,10 +5,16 @@ import Card from "./Card";
 import { useDispatch, useSelector } from "react-redux";
 import { setCards, addCard } from "../store/slices/cardSlice";
 
-const BoardList = ({ list, onDelete }) => {
-  const dispatch = useDispatch();
+import type { TrelloList } from "../types";
+import type { RootState, AppDispatch } from "../store/store";
 
-  const cards = useSelector((state) => state.cards[list.id] || []);
+const BoardList = ({ list, onDelete }:{
+  list:TrelloList;
+  onDelete:(listId:string)=> void
+}) => {
+  const dispatch:AppDispatch = useDispatch();
+
+  const cards = useSelector((state:RootState) => state.cards[list.id] || []);
   const [isAddingCard, setIsAddingCard] = useState(false);
   const [cardName, setCardName] = useState("");
 

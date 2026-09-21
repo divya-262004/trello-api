@@ -6,14 +6,23 @@ import {
   deleteChecklist,
 } from "../services/trelloApi";
 import Checklist from "./Checklist";
-import { setChecklists, addChecklist, removeChecklist } from "../store/slices/checklistSlice";
+import {
+  setChecklists,
+  addChecklist,
+  removeChecklist,
+} from "../store/slices/checklistSlice";
 import { useDispatch, useSelector } from "react-redux";
 
-const Card = ({ card }) => {
-  const dispatch = useDispatch();
+import type { TrelloCard } from "../types";
+import type { RootState, AppDispatch } from "../store/store";
+
+const Card = ({ card }: { card: TrelloCard }) => {
+  const dispatch: AppDispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const checklists = useSelector((state) => state.checklists[card.id]);
+  const checklists = useSelector(
+    (state: RootState) => state.checklists[card.id],
+  );
   const [isAddingChecklist, setIsAddingChecklist] = useState(false);
   const [checklistName, setChecklistName] = useState("");
 
@@ -41,12 +50,14 @@ const Card = ({ card }) => {
     if (!checklistName.trim()) return;
 
     try {
-      const response=await createCheckList(card.id, checklistName);
+      const response = await createCheckList(card.id, checklistName);
 
-      dispatch(addChecklist({
-        cardId:card.id,
-        checklist:response.data
-      }))
+      dispatch(
+        addChecklist({
+          cardId: card.id,
+          checklist: response.data,
+        }),
+      );
 
       setChecklistName("");
       setIsAddingChecklist(false);
@@ -57,14 +68,16 @@ const Card = ({ card }) => {
     }
   };
 
-  const handleDeleteChecklist = async (checklistId) => {
+  const handleDeleteChecklist = async (checklistId: string) => {
     try {
       await deleteChecklist(checklistId);
 
-      dispatch(removeChecklist({
-        cardId:card.id,
-        checklistId
-      }))
+      dispatch(
+        removeChecklist({
+          cardId: card.id,
+          checklistId,
+        }),
+      );
 
       message.success("Checklist deleted");
     } catch (error) {

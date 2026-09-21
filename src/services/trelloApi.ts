@@ -1,11 +1,17 @@
 import axios from "axios";
-
+import type { 
+  Board, 
+  TrelloCard,
+  TrelloList,
+  TrelloCheckItem,
+  TrelloChecklist,
+  CheckItemState } from "../types";
 const apiKey=import.meta.env.VITE_TRELLO_API_KEY;
 const token=import.meta.env.VITE_TRELLO_TOKEN;
 const baseUrl=import.meta.env.VITE_TRELLO_URL;
 
 export const getBoards=()=>{
-    return axios.get(`${baseUrl}/members/me/boards`,{
+    return axios.get<Board[]>(`${baseUrl}/members/me/boards`,{
         params:{
             key:apiKey,
             token,
@@ -13,8 +19,8 @@ export const getBoards=()=>{
     });
 }
 
-export const createBoard=(boardName)=>{
-    return axios.post(`${baseUrl}/boards`, null,{
+export const createBoard=(boardName: string)=>{
+    return axios.post<Board>(`${baseUrl}/boards`, null,{
         params:{
             name:boardName,
             key:apiKey,
@@ -23,8 +29,8 @@ export const createBoard=(boardName)=>{
     })
 }
 
-export const getLists=(boardId)=>{
-    return axios.get(`${baseUrl}/boards/${boardId}/lists`,{
+export const getLists=(boardId : string)=>{
+    return axios.get<TrelloList[]>(`${baseUrl}/boards/${boardId}/lists`,{
         params:{
             key:apiKey,
             token,
@@ -33,8 +39,8 @@ export const getLists=(boardId)=>{
     
 }
 
-export const getCards=(listId)=>{
-    return axios.get(`${baseUrl}/lists/${listId}/cards`,{
+export const getCards=(listId : string)=>{
+    return axios.get<TrelloCard[]>(`${baseUrl}/lists/${listId}/cards`,{
         params:{
             key:apiKey,
             token,
@@ -42,8 +48,8 @@ export const getCards=(listId)=>{
     })
 }
 
-export const createList=(listName, boardId)=>{
-    return axios.post(`${baseUrl}/lists`, null,{
+export const createList=(listName : string, boardId :string)=>{
+    return axios.post<TrelloList>(`${baseUrl}/lists`, null,{
         params:{
             name:listName,
             idBoard:boardId,
@@ -54,7 +60,7 @@ export const createList=(listName, boardId)=>{
     })
 }
 
-export const closeList = (listId) => {
+export const closeList = (listId:string) => {
   return axios.put(
     `${baseUrl}/lists/${listId}/closed`,
     null,
@@ -68,8 +74,8 @@ export const closeList = (listId) => {
   );
 };
 
-export const createCard=(listId, cardName)=>{
-    return axios.post(`${baseUrl}/cards`, null,{
+export const createCard=(listId:string, cardName :string)=>{
+    return axios.post<TrelloCard>(`${baseUrl}/cards`, null,{
         params:{
             name:cardName,
             idList:listId,
@@ -80,8 +86,8 @@ export const createCard=(listId, cardName)=>{
     })
 }
 
-export const createCheckList=(cardId, checkListName)=>{
-    return axios.post(`${baseUrl}/checklists`,null,{
+export const createCheckList=(cardId : string, checkListName:string)=>{
+    return axios.post<TrelloChecklist>(`${baseUrl}/checklists`,null,{
         params:{
            
             idCard:cardId,
@@ -93,8 +99,8 @@ export const createCheckList=(cardId, checkListName)=>{
     })
 }
 
-export const getCheckLists = (cardId) => {
-  return axios.get(
+export const getCheckLists = (cardId:string) => {
+  return axios.get<TrelloChecklist[]>(
     `${baseUrl}/cards/${cardId}/checklists`,
     {
       params: {
@@ -105,7 +111,7 @@ export const getCheckLists = (cardId) => {
   );
 };
 
-export const deleteChecklist = (checklistId) => {
+export const deleteChecklist = (checklistId :string) => {
   return axios.delete(
     `${baseUrl}/checklists/${checklistId}`,
     {
@@ -117,8 +123,8 @@ export const deleteChecklist = (checklistId) => {
   );
 };
 
-export const getCheckItems = (checklistId) => {
-  return axios.get(
+export const getCheckItems = (checklistId:string) => {
+  return axios.get<TrelloCheckItem[]>(
     `${baseUrl}/checklists/${checklistId}/checkItems`,
     {
       params: {
@@ -129,8 +135,8 @@ export const getCheckItems = (checklistId) => {
   );
 };
 
-export const createCheckItem = (checklistId, itemName) => {
-  return axios.post(
+export const createCheckItem = (checklistId:string, itemName:string) => {
+  return axios.post<TrelloCheckItem>(
     `${baseUrl}/checklists/${checklistId}/checkItems`,
     null,
     {
@@ -144,7 +150,7 @@ export const createCheckItem = (checklistId, itemName) => {
   );
 };
 
-export const updateCheckItem = (cardId, itemId, state) => {
+export const updateCheckItem = (cardId:string, itemId :string, state:CheckItemState) => {
   return axios.put(
     `${baseUrl}/cards/${cardId}/checkItem/${itemId}`,
     null,
@@ -158,7 +164,7 @@ export const updateCheckItem = (cardId, itemId, state) => {
   );
 };
 
-export const deleteCheckItem = (checklistId, itemId) => {
+export const deleteCheckItem = (checklistId:string, itemId:string) => {
   return axios.delete(
     `${baseUrl}/checklists/${checklistId}/checkItems/${itemId}`,
     {

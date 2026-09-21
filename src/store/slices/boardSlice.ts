@@ -1,15 +1,15 @@
-import { createSlice } from "@reduxjs/toolkit";
-
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import type { Board } from "../../types";
 
 const boardSlice=createSlice({
     name:"boards",
-    initialState:[],
+    initialState:[] as Board[],
     reducers:{
-        setBoards:(state, action)=>{
+        setBoards:(state, action:PayloadAction<Board[]>)=>{
             return action.payload;
         },
 
-        addBoard:(state, action)=>{
+        addBoard:(state, action: PayloadAction<Board>)=>{
             state.push(action.payload)
         }
     }

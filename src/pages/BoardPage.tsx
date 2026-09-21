@@ -9,17 +9,19 @@ import BoardList from "../components/BoardList";
 import { Button, Flex, message, Input } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { setLists, addList, removeList } from "../store/slices/listSlice";
+import type { RootState, AppDispatch } from "../store/store";
 
 const BoardPage = () => {
-  const { boardId } = useParams();
+  const { boardId } = useParams<{boardId:string}>();
 
-  const dispatch = useDispatch();
-  const lists = useSelector((state) => state.lists[boardId]);
+  const dispatch: AppDispatch= useDispatch();
+  const lists = useSelector((state:RootState) => state.lists[boardId??""]);
 
   const [isAddingList, setIsAddingList] = useState(false);
   const [listName, setListName] = useState("");
 
   useEffect(() => {
+    if(!boardId) return ;
     const fetchLists = async () => {
       try{
         const response = await getLists(boardId);
@@ -38,7 +40,7 @@ const BoardPage = () => {
   }, [boardId]);
 
   const handleCreateList = async () => {
-    if (!listName.trim()) {
+    if (!boardId||!listName.trim()) {
       return;
     }
 
@@ -58,7 +60,8 @@ const BoardPage = () => {
     }
   };
 
-  const handleDeleteList = async (listId) => {
+  const handleDeleteList = async (listId:string) => {
+    if(!boardId) return;
     try {
       await closeList(listId);
    
