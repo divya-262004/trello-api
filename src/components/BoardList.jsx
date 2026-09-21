@@ -1,21 +1,27 @@
 import { Button, Input, message } from "antd";
 import { useEffect, useState } from "react";
-import {
-  getCards,
-  createCard,
-} from "../services/trelloApi";
+import { getCards, createCard } from "../services/trelloApi";
 import Card from "./Card";
+import { useDispatch, useSelector } from "react-redux";
+import { setCards, addCard } from "../store/slices/cardSlice";
 
 const BoardList = ({ list, onDelete }) => {
-  const [cards, setCards] = useState([]);
+  const dispatch = useDispatch();
+
+  const cards = useSelector((state) => state.cards[list.id] || []);
   const [isAddingCard, setIsAddingCard] = useState(false);
   const [cardName, setCardName] = useState("");
-
 
   const fetchCards = async () => {
     try {
       const response = await getCards(list.id);
-      setCards(response.data);
+
+      dispatch(
+        setCards({
+          listId: list.id,
+          cards: response.data,
+        }),
+      );
     } catch (error) {
       message.error("Failed to fetch cards");
     }
@@ -29,9 +35,12 @@ const BoardList = ({ list, onDelete }) => {
     if (!cardName.trim()) return;
 
     try {
-      await createCard(list.id, cardName);
+      const response =await createCard(list.id, cardName);
 
-      await fetchCards();
+      dispatch(addCard({
+        listId:list.id,
+        card:response.data
+      }))
 
       setCardName("");
       setIsAddingCard(false);
@@ -44,7 +53,6 @@ const BoardList = ({ list, onDelete }) => {
 
   return (
     <div className="w-60 shrink-0 rounded-lg bg-gray-200 p-3">
-    
       <div className="mb-3 flex items-center justify-between">
         <h3 className="font-semibold">{list.name}</h3>
 
@@ -57,13 +65,9 @@ const BoardList = ({ list, onDelete }) => {
         </button>
       </div>
 
-     
       <div className="flex flex-col gap-2">
         {cards.map((card) => (
-          <Card
-            key={card.id}
-            card={card}
-          />
+          <Card key={card.id} card={card} />
         ))}
 
         {isAddingCard ? (
@@ -77,10 +81,7 @@ const BoardList = ({ list, onDelete }) => {
             />
 
             <div className="flex gap-3">
-              <Button
-                type="primary"
-                onClick={handleCreateCard}
-              >
+              <Button type="primary" onClick={handleCreateCard}>
                 Add Card
               </Button>
 
@@ -108,5 +109,3 @@ const BoardList = ({ list, onDelete }) => {
 };
 
 export default BoardList;
-
-
