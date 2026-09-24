@@ -6,31 +6,24 @@ import { setBoards, addBoard } from "../store/slices/boardSlice";
 
 import { useSelector, useDispatch } from "react-redux";
 
-
 const BoardsPage = () => {
-
-  const dispatch=useDispatch();
-  const boards=useSelector((state)=>state.boards);
+  const dispatch = useDispatch();
+  const boards = useSelector((state) => state.boards);
 
   const [isModalOpen, setModalOpen] = useState(false);
   const [boardName, setBoardName] = useState("");
   const navigate = useNavigate();
-  
+
   useEffect(() => {
-    
-      const fetchBoards = async () => {
-    try{
-      const response = await getBoards();
+    const fetchBoards = async () => {
+      try {
+        const response = await getBoards();
 
-      dispatch(setBoards(response.data));
-    }
-    
-
-    catch(error){
-      message.error("Failed to fetxh boards");
-    }
-  }
-    
+        dispatch(setBoards(response.data));
+      } catch {
+        message.error("Failed to fetxh boards");
+      }
+    };
 
     fetchBoards();
   }, []);
@@ -40,15 +33,14 @@ const BoardsPage = () => {
       return;
     }
     try {
-      const response=await createBoard(boardName);
-      message.success("Created Board")
+      const response = await createBoard(boardName);
+      message.success("Created Board");
 
       setBoardName("");
       setModalOpen(false);
 
-      
       dispatch(addBoard(response.data));
-    } catch (error) {
+    } catch {
       message.error("Failed to create board");
     }
   }

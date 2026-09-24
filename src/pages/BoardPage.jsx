@@ -29,7 +29,7 @@ const BoardPage = () => {
           lists: response.data,
         }),
       );
-    }catch(error){
+    }catch{
       message.error("Failed to fetch lists");
     }
       }
@@ -53,7 +53,7 @@ const BoardPage = () => {
         list:response.data}));
 
       message.success("List Added");
-    } catch (error) {
+    } catch {
       message.error("Failed to Create List");
     }
   };
@@ -69,7 +69,7 @@ const BoardPage = () => {
         listId
       }))
 
-    } catch (error) {
+    } catch {
       message.error("Failed to delete list");
     }
   };
