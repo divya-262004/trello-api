@@ -16,7 +16,7 @@ const Checklist = ({ checklist, cardId, onDelete }) => {
     try {
       const response = await getCheckItems(checklist.id);
       setItems(response.data);
-    } catch (error) {
+    } catch {
       message.error("Failed to fetch checklist items");
     }
   };
@@ -37,7 +37,7 @@ const Checklist = ({ checklist, cardId, onDelete }) => {
       setIsAddingItem(false);
 
       message.success("Item added");
-    } catch (error) {
+    } catch {
       message.error("Failed to create checklist item");
     }
   };
@@ -49,7 +49,7 @@ const Checklist = ({ checklist, cardId, onDelete }) => {
       await updateCheckItem(cardId, item.id, newState);
 
       await fetchItems();
-    } catch (error) {
+    } catch{
       message.error("Failed to update checklist item");
     }
   };
@@ -61,7 +61,7 @@ const Checklist = ({ checklist, cardId, onDelete }) => {
       await fetchItems();
 
       message.success("Item deleted");
-    } catch (error) {
+    } catch {
       message.error("Failed to delete checklist item");
     }
   };

@@ -8,15 +8,18 @@ const BoardList = ({ list, onDelete }) => {
   const [isAddingCard, setIsAddingCard] = useState(false);
   const [cardName, setCardName] = useState("");
 
-  useEffect(() => {
-    const fetchCards = async () => {
+
+  const fetchCards = async () => {
       try {
         const response = await getCards(list.id);
         setCards(response.data);
-      } catch (error) {
+      } catch{
         message.error("Failed to fetch cards");
       }
     };
+    
+  useEffect(() => {
+    
     fetchCards();
   }, [list.id]);
 
@@ -32,7 +35,7 @@ const BoardList = ({ list, onDelete }) => {
       setIsAddingCard(false);
 
       message.success("Card added");
-    } catch (error) {
+    } catch{
       message.error("Failed to create card");
     }
   };

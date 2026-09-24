@@ -15,7 +15,7 @@ const BoardsPage = () => {
         const response = await getBoards();
 
         setBoards(response.data);
-      } catch (error) {
+      } catch{
         message.error("Failed to fecth boards");
       }
     };
@@ -36,7 +36,7 @@ const BoardsPage = () => {
 
       const response = await getBoards();
       setBoards(response.data);
-    } catch (error) {
+    } catch {
       message.error("Failed to create board");
     }
   }

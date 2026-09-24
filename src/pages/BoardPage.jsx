@@ -19,7 +19,7 @@ const BoardPage = () => {
       try {
         const response = await getLists(boardId);
         setLists(response.data);
-      } catch (error) {
+      } catch{
         message.error("Failed to Fetch Lists");
       }
     };
@@ -40,7 +40,7 @@ const BoardPage = () => {
       setLists(response.data);
 
       message.success("List Added");
-    } catch (error) {
+    } catch {
       message.error("Failed to Create List");
     }
   };
@@ -52,7 +52,7 @@ const BoardPage = () => {
       message.success("List Deleted");
 
       setLists((prevLists) => prevLists.filter((list) => list.id !== listId));
-    } catch (error) {
+    } catch{
       message.error("Failed to delete list");
     }
   };
