@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button, Card, Flex, Input, Typography, Modal, message } from "antd";
 import { getBoards, createBoard } from "../services/trelloApi";
 import { useState, useEffect } from "react";
