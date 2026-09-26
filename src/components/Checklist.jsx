@@ -22,6 +22,7 @@ const Checklist = ({ checklist, cardId, onDelete }) => {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchItems();
   }, [checklist.id]);
 

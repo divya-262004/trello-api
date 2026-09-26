@@ -26,6 +26,7 @@ const Card = ({ card }) => {
 
   useEffect(() => {
     if (isModalOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchChecklists();
     }
   }, [isModalOpen]);
@@ -43,7 +44,7 @@ const Card = ({ card }) => {
       setIsAddingChecklist(false);
 
       message.success("Checklist created");
-    } catch (error) {
+    } catch  {
       message.error("Failed to create checklist");
     }
   };

@@ -94,10 +94,10 @@ const BoardPage = () => {
       ) : (
         <Button
           size="large"
-          className="!w-60 
-         !text-white 
+          className="w-60! 
+         text-white! 
          font-semibold
-          !bg-gray-400"
+          bg-gray-400!"
           onClick={() => setIsAddingList(true)}
         >
           + Add another list

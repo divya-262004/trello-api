@@ -78,37 +78,27 @@ The response is stored in component state and used to render the UI.
 ## Project Structure
 
 ```text
-trello-react-divya/
-│
-├── public/
-│
-├── src/
-│   ├── assets/
-│   │
-│   ├── components/
-│   │   ├── Header.jsx
-│   │   ├── BoardList.jsx
-│   │   ├── Card.jsx
-│   │   └── Checklist.jsx
-│   │
-│   ├── config/
-│   │   └── config.js
-│   │
-│   ├── pages/
-│   │   ├── BoardsPage.jsx
-│   │   └── BoardPage.jsx
-│   │
-│   ├── services/
-│   │   └── trelloApi.js
-│   │
-│   ├── App.jsx
-│   ├── main.jsx
-│   └── index.css
-│
-├── eslint.config.js
-├── index.html
-├── package.json
-├── package-lock.json
-├── vite.config.js
-└── README.md
+src/
+├── assets/
+├── components/
+│   ├── Header.jsx
+│   ├── BoardList.jsx
+│   ├── Card.jsx
+│   └── Checklist.jsx
+├── config/
+│   └── config.js
+├── pages/
+│   ├── BoardsPage.jsx
+│   └── BoardPage.jsx
+├── services/
+│   └── trelloApi.js
+├── store/
+│   ├── store.js
+│   ├── boardSlice.js
+│   ├── listSlice.js
+│   ├── checklistSlice.js
+│   └── checkItemSlice.js
+├── App.jsx
+├── main.jsx
+└── index.css
 ```
