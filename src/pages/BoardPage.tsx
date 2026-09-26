@@ -31,7 +31,8 @@ const BoardPage = () => {
           lists: response.data,
         }),
       );
-    }catch(error){
+    }
+    catch{
       message.error("Failed to fetch lists");
     }
       }
@@ -55,7 +56,7 @@ const BoardPage = () => {
         list:response.data}));
 
       message.success("List Added");
-    } catch (error) {
+    } catch {
       message.error("Failed to Create List");
     }
   };
@@ -72,7 +73,7 @@ const BoardPage = () => {
         listId
       }))
 
-    } catch (error) {
+    } catch {
       message.error("Failed to delete list");
     }
   };
@@ -87,7 +88,7 @@ const BoardPage = () => {
       ))}
 
       {isAddingList ? (
-        <div className="!w-60 shrink-0">
+        <div className="w-60! shrink-0">
           <Input
             value={listName}
             onChange={(e) => setListName(e.target.value)}
@@ -115,10 +116,10 @@ const BoardPage = () => {
       ) : (
         <Button
           size="large"
-          className="!w-60 
-         !text-white 
+          className="w-60! 
+         text-white! 
          font-semibold
-          !bg-gray-400"
+          bg-gray-400!"
           onClick={() => setIsAddingList(true)}
           
         >

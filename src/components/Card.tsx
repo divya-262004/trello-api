@@ -35,7 +35,7 @@ const Card = ({ card }: { card: TrelloCard }) => {
           checklists: response.data,
         }),
       );
-    } catch (error) {
+    } catch  {
       message.error("Failed to fetch checklists");
     }
   };
@@ -63,7 +63,7 @@ const Card = ({ card }: { card: TrelloCard }) => {
       setIsAddingChecklist(false);
 
       message.success("Checklist created");
-    } catch (error) {
+    } catch  {
       message.error("Failed to create checklist");
     }
   };
@@ -80,7 +80,7 @@ const Card = ({ card }: { card: TrelloCard }) => {
       );
 
       message.success("Checklist deleted");
-    } catch (error) {
+    } catch  {
       message.error("Failed to delete checklist");
     }
   };

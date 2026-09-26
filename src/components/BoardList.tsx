@@ -28,7 +28,7 @@ const BoardList = ({ list, onDelete }:{
           cards: response.data,
         }),
       );
-    } catch (error) {
+    } catch {
       message.error("Failed to fetch cards");
     }
   };
@@ -52,7 +52,8 @@ const BoardList = ({ list, onDelete }:{
       setIsAddingCard(false);
 
       message.success("Card added");
-    } catch{
+    } 
+    catch{
       message.error("Failed to create card");
     }
   };
@@ -103,7 +104,7 @@ const BoardList = ({ list, onDelete }:{
           </div>
         ) : (
           <Button
-            className="!bg-gray-300"
+            className="bg-gray-300!"
             onClick={() => setIsAddingCard(true)}
           >
             + Add Card
