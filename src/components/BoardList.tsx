@@ -52,7 +52,7 @@ const BoardList = ({ list, onDelete }:{
       setIsAddingCard(false);
 
       message.success("Card added");
-    } catch (error) {
+    } catch{
       message.error("Failed to create card");
     }
   };
