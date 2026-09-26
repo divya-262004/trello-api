@@ -35,7 +35,7 @@ const BoardPage = () => {
       }
       
     fetchLists();
-  }, [boardId]);
+  }, [boardId, dispatch]);
 
   const handleCreateList = async () => {
     if (!listName.trim()) {
@@ -77,14 +77,14 @@ const BoardPage = () => {
     <Flex
       gap="middle"
       wrap={false}
-      className="items-start overflow-x-auto pb-4 hide-scrollbar  !p-5 min-h-screen bg-blue-800"
+      className="items-start overflow-x-auto pb-4 hide-scrollbar  p-5! min-h-screen bg-blue-800"
     >
       {(lists||[]).map((list) => (
         <BoardList key={list.id} list={list} onDelete={handleDeleteList} />
       ))}
 
       {isAddingList ? (
-        <div className="!w-60 shrink-0">
+        <div className="w-60! shrink-0">
           <Input
             value={listName}
             onChange={(e) => setListName(e.target.value)}
@@ -112,10 +112,10 @@ const BoardPage = () => {
       ) : (
         <Button
           size="large"
-          className="!w-60 
-         !text-white 
+          className="w-60! 
+         text-white! 
          font-semibold
-          !bg-gray-400"
+          bg-gray-400!"
           onClick={() => setIsAddingList(true)}
           
         >

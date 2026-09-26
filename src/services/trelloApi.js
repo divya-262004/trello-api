@@ -59,8 +59,8 @@ export const createCard=(listId, cardName)=>{
     return trelloApi.post("/cards", null,{
       params:{
         name:cardName,
-            idList:listId,
-            pos:"bottom",
+        idList:listId,
+        pos:"bottom",
       }
     })
 }
