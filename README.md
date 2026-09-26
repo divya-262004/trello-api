@@ -1,16 +1,114 @@
-# React + Vite
+# Trello Clone — React + JavaScript
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A Trello-style task management application built with React and JavaScript.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React
+- JavaScript
+- Vite
+- Axios
+- React Router
+- Ant Design
+- Tailwind CSS
+- Trello REST API
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- View and create boards
+- Open boards
+- View, create, and archive lists
+- View, create, and archive cards
+- Create and delete checklists
+- Create, toggle, and delete checklist items
 
-## Expanding the ESLint configuration
+## Architecture
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+This is the React implementation
+
+```text
+Trello API
+    ↓
+React Component
+    ↓
+useState
+    ↓
+UI
+```
+
+Components communicate through props and callback functions.
+
+```text
+BoardPage
+   ↓ props
+List
+   ↓ props
+Card
+   ↓ props
+Checklist
+```
+
+## State Management
+
+Local component state is handled with `useState`.
+
+Examples include:
+
+- Modal visibility
+- Input values
+- Fetched boards, lists, and cards
+- Temporary UI state
+
+Example:
+
+```javascript
+const [listName, setListName] = useState("");
+```
+
+## API Communication
+
+Axios communicates with the Trello REST API.
+
+```javascript
+const response = await trelloApi.get(`/boards/${boardId}/lists`);
+```
+
+The response is stored in component state and used to render the UI.
+
+## Project Structure
+
+```text
+trello-react-divya/
+│
+├── public/
+│
+├── src/
+│   ├── assets/
+│   │
+│   ├── components/
+│   │   ├── Header.jsx
+│   │   ├── BoardList.jsx
+│   │   ├── Card.jsx
+│   │   └── Checklist.jsx
+│   │
+│   ├── config/
+│   │   └── config.js
+│   │
+│   ├── pages/
+│   │   ├── BoardsPage.jsx
+│   │   └── BoardPage.jsx
+│   │
+│   ├── services/
+│   │   └── trelloApi.js
+│   │
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── index.css
+│
+├── eslint.config.js
+├── index.html
+├── package.json
+├── package-lock.json
+├── vite.config.js
+└── README.md
+```
