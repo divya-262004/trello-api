@@ -94,7 +94,7 @@ const BoardsPage = () => {
               key={board.id}
               hoverable
               onClick={() => navigate(`/boards/${board.id}`)}
-              className="w-70 !bg-blue-600"
+              className="w-70 bg-blue-600!"
             >
               <Typography.Title level={5} className="ml-[30%]">
                 {board.name}
