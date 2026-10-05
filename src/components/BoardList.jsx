@@ -1,28 +1,26 @@
-import { Button, Input, message } from "antd";
-import { useEffect, useState } from "react";
-import { getCards, createCard } from "../services/trelloApi";
-import Card from "./Card";
+import {Button, Input, message} from 'antd';
+import {useEffect, useState, useCallback} from 'react';
+import {getCards, createCard} from '../services/trelloApi';
+import Card from './Card';
 
-const BoardList = ({ list, onDelete }) => {
+const BoardList = ({list, onDelete}) => {
   const [cards, setCards] = useState([]);
   const [isAddingCard, setIsAddingCard] = useState(false);
-  const [cardName, setCardName] = useState("");
+  const [cardName, setCardName] = useState('');
 
+  const fetchCards = useCallback(async () => {
+    try {
+      const response = await getCards(list.id);
+      setCards(response.data);
+    } catch {
+      message.error('Failed to fetch cards');
+    }
+  }, [list.id]);
 
-  const fetchCards = async () => {
-      try {
-        const response = await getCards(list.id);
-        setCards(response.data);
-      } catch{
-        message.error("Failed to fetch cards");
-      }
-    };
-    
   useEffect(() => {
-    
     // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchCards();
-  }, [list.id]);
+  }, [fetchCards]);
 
   const handleCreateCard = async () => {
     if (!cardName.trim()) return;
@@ -32,13 +30,17 @@ const BoardList = ({ list, onDelete }) => {
 
       await fetchCards();
 
-      setCardName("");
+      setCardName('');
       setIsAddingCard(false);
 
-      message.success("Card added");
-    } catch{
-      message.error("Failed to create card");
+      message.success('Card added');
+    } catch {
+      message.error('Failed to create card');
     }
+  };
+
+  const handleDeleteCard = (cardId) => {
+    setCards((prev) => prev.filter((card) => card.id !== cardId));
   };
 
   return (
@@ -49,7 +51,11 @@ const BoardList = ({ list, onDelete }) => {
         <button
           type="button"
           onClick={() => onDelete(list.id)}
-          className="rounded p-1 text-gray-500 hover:bg-gray-300 hover:text-gray-800"
+          className="rounded
+          p-1
+          text-gray-500
+          hover:bg-gray-300
+          hover:text-gray-800"
         >
           ✕
         </button>
@@ -57,7 +63,7 @@ const BoardList = ({ list, onDelete }) => {
 
       <div className="flex flex-col gap-2">
         {cards.map((card) => (
-          <Card key={card.id} card={card} />
+          <Card key={card.id} card={card} onDelete={handleDeleteCard} />
         ))}
 
         {isAddingCard ? (
@@ -78,7 +84,7 @@ const BoardList = ({ list, onDelete }) => {
               <Button
                 onClick={() => {
                   setIsAddingCard(false);
-                  setCardName("");
+                  setCardName('');
                 }}
               >
                 ✕

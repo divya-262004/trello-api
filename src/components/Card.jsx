@@ -1,35 +1,36 @@
-import { Button, Input, message, Modal } from "antd";
-import { useEffect, useState } from "react";
+import {Button, Input, message, Modal} from 'antd';
+import {useEffect, useState, useCallback} from 'react';
 import {
   getCheckLists,
   createCheckList,
   deleteChecklist,
-} from "../services/trelloApi";
-import Checklist from "./Checklist";
+  deleteCard,
+} from '../services/trelloApi';
+import Checklist from './Checklist';
 
-const Card = ({ card }) => {
+const Card = ({card, onDelete}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [checklists, setChecklists] = useState([]);
   const [isAddingChecklist, setIsAddingChecklist] = useState(false);
-  const [checklistName, setChecklistName] = useState("");
+  const [checklistName, setChecklistName] = useState('');
 
 
-  const fetchChecklists = async () => {
+  const fetchChecklists = useCallback( async () => {
     try {
       const response = await getCheckLists(card.id);
       setChecklists(response.data);
-    } catch{
-      message.error("Failed to fetch checklists");
+    } catch {
+      message.error('Failed to fetch checklists');
     }
-  };
+  }, [card.id]);
 
   useEffect(() => {
     if (isModalOpen) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchChecklists();
     }
-  }, [isModalOpen]);
+  }, [isModalOpen, fetchChecklists]);
 
 
   const handleCreateChecklist = async () => {
@@ -40,12 +41,12 @@ const Card = ({ card }) => {
 
       await fetchChecklists();
 
-      setChecklistName("");
+      setChecklistName('');
       setIsAddingChecklist(false);
 
-      message.success("Checklist created");
-    } catch  {
-      message.error("Failed to create checklist");
+      message.success('Checklist created');
+    } catch {
+      message.error('Failed to create checklist');
     }
   };
 
@@ -57,20 +58,47 @@ const Card = ({ card }) => {
         prev.filter((checklist) => checklist.id !== checklistId),
       );
 
-      message.success("Checklist deleted");
-    } catch{
-      message.error("Failed to delete checklist");
+      message.success('Checklist deleted');
+    } catch {
+      message.error('Failed to delete checklist');
+    }
+  };
+
+  const handleDeleteCard = async (e) => {
+    e.stopPropagation();
+
+    try {
+      await deleteCard(card.id);
+
+      onDelete(card.id);
+
+      message.success('Card deleted');
+    } catch {
+      message.error('Failed to delete card');
     }
   };
 
   return (
     <>
-    
+
       <div
-        className="cursor-pointer rounded-lg bg-white p-3 shadow-sm"
+        className="flex
+        justify-between
+        cursor-pointer
+        rounded-lg
+        bg-white p-3
+        shadow-sm"
         onClick={() => setIsModalOpen(true)}
       >
-        {card.name}
+        <span>{card.name}</span>
+
+        <Button
+          type="text"
+          onClick={handleDeleteCard}
+          className="text-gray-500!"
+        >
+          ✕
+        </Button>
       </div>
 
       <Modal
@@ -79,7 +107,7 @@ const Card = ({ card }) => {
         footer={null}
         onCancel={() => setIsModalOpen(false)}
       >
-    
+
         {checklists.map((checklist) => (
           <Checklist
             key={checklist.id}
@@ -110,7 +138,7 @@ const Card = ({ card }) => {
               <Button
                 onClick={() => {
                   setIsAddingChecklist(false);
-                  setChecklistName("");
+                  setChecklistName('');
                 }}
               >
                 ✕

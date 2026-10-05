@@ -1,26 +1,26 @@
-import { useParams } from "react-router-dom";
+import {useParams} from 'react-router-dom';
 import {
   getLists,
   createList,
   closeList,
-} from "../services/trelloApi";
-import { useState, useEffect } from "react";
-import BoardList from "../components/BoardList";
-import { Button, Flex, message } from "antd";
+} from '../services/trelloApi';
+import {useState, useEffect} from 'react';
+import BoardList from '../components/BoardList';
+import {Button, Flex, message} from 'antd';
 
 const BoardPage = () => {
-  const { boardId } = useParams();
+  const {boardId} = useParams();
   const [lists, setLists] = useState([]);
   const [isAddingList, setIsAddingList] = useState(false);
-  const [listName, setListName] = useState("");
+  const [listName, setListName] = useState('');
 
   useEffect(() => {
     const fetchLists = async () => {
       try {
         const response = await getLists(boardId);
         setLists(response.data);
-      } catch{
-        message.error("Failed to Fetch Lists");
+      } catch {
+        message.error('Failed to Fetch Lists');
       }
     };
     fetchLists();
@@ -33,27 +33,27 @@ const BoardPage = () => {
 
     try {
       await createList(listName, boardId);
-      setListName("");
+      setListName('');
       setIsAddingList(false);
 
       const response = await getLists(boardId);
       setLists(response.data);
 
-      message.success("List Added");
+      message.success('List Added');
     } catch {
-      message.error("Failed to Create List");
+      message.error('Failed to Create List');
     }
   };
 
   const handleDeleteList = async (listId) => {
     try {
       await closeList(listId);
-     
-      message.success("List Deleted");
+
+      message.success('List Deleted');
 
       setLists((prevLists) => prevLists.filter((list) => list.id !== listId));
-    } catch{
-      message.error("Failed to delete list");
+    } catch {
+      message.error('Failed to delete list');
     }
   };
   return (
@@ -84,7 +84,7 @@ const BoardPage = () => {
             <Button
               onClick={() => {
                 setIsAddingList(false);
-                setListName("");
+                setListName('');
               }}
             >
               ✕
@@ -94,8 +94,8 @@ const BoardPage = () => {
       ) : (
         <Button
           size="large"
-          className="w-60! 
-         text-white! 
+          className="w-60!
+         text-white!
          font-semibold
           bg-gray-400!"
           onClick={() => setIsAddingList(true)}
