@@ -1,17 +1,17 @@
-import { useNavigate } from "react-router-dom";
-import { Button, Card, Flex, Input, Typography, Modal, message } from "antd";
-import { getBoards, createBoard } from "../services/trelloApi";
-import { useState, useEffect } from "react";
-import { setBoards, addBoard } from "../store/slices/boardSlice";
+import {useNavigate} from 'react-router-dom';
+import {Button, Card, Flex, Input, Typography, Modal, message} from 'antd';
+import {getBoards, createBoard} from '../services/trelloApi';
+import {useState, useEffect} from 'react';
+import {setBoards, addBoard} from '../store/slices/boardSlice';
 
-import { useSelector, useDispatch } from "react-redux";
+import {useSelector, useDispatch} from 'react-redux';
 
 const BoardsPage = () => {
   const dispatch = useDispatch();
   const boards = useSelector((state) => state.boards);
 
   const [isModalOpen, setModalOpen] = useState(false);
-  const [boardName, setBoardName] = useState("");
+  const [boardName, setBoardName] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,12 +21,12 @@ const BoardsPage = () => {
 
         dispatch(setBoards(response.data));
       } catch {
-        message.error("Failed to fetxh boards");
+        message.error('Failed to fetxh boards');
       }
     };
 
     fetchBoards();
-  }, []);
+  }, [dispatch]);
 
   async function handleCreateBoard() {
     if (!boardName.trim()) {
@@ -34,14 +34,14 @@ const BoardsPage = () => {
     }
     try {
       const response = await createBoard(boardName);
-      message.success("Created Board");
+      message.success('Created Board');
 
-      setBoardName("");
+      setBoardName('');
       setModalOpen(false);
 
       dispatch(addBoard(response.data));
     } catch {
-      message.error("Failed to create board");
+      message.error('Failed to create board');
     }
   }
   return (
@@ -53,12 +53,12 @@ const BoardsPage = () => {
             <Button
               type="primary"
               style={{
-                width: "150px",
-                display: "flex",
-                gap: "10px",
-                justifyContent: "center",
-                padding: "16px",
-                fontSize: "16px",
+                width: '150px',
+                display: 'flex',
+                gap: '10px',
+                justifyContent: 'center',
+                padding: '16px',
+                fontSize: '16px',
                 fontWeight: 600,
               }}
               onClick={() => setModalOpen(true)}

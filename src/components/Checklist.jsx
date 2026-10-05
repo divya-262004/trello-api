@@ -1,40 +1,39 @@
-import { Button, Input, message } from "antd";
-import { useEffect, useState } from "react";
+import {Button, Input, message} from 'antd';
+import {useEffect, useState, useCallback} from 'react';
 import {
   getCheckItems,
   createCheckItem,
   updateCheckItem,
   deleteCheckItem,
-} from "../services/trelloApi";
-import { useDispatch, useSelector } from "react-redux";
-import { setItems, addItem, updateItem, removeItem } from "../store/slices/checkItemSlice";
+} from '../services/trelloApi';
+import {useDispatch, useSelector} from 'react-redux';
+import {setItems, addItem, updateItem, removeItem} from '../store/slices/checkItemSlice';
 
-const Checklist = ({ checklist, cardId, onDelete }) => {
+const Checklist = ({checklist, cardId, onDelete}) => {
   const dispatch = useDispatch();
 
   const items = useSelector((state) => state.items[checklist.id]) || [];
 
   const [isAddingItem, setIsAddingItem] = useState(false);
-  const [itemName, setItemName] = useState("");
+  const [itemName, setItemName] = useState('');
 
-  const fetchItems = async () => {
+  const fetchItems = useCallback(async () => {
     try {
       const response = await getCheckItems(checklist.id);
       dispatch(
-        setItems({
-          checklistId: checklist.id,
-          items: response.data,
-        }),
+          setItems({
+            checklistId: checklist.id,
+            items: response.data,
+          }),
       );
-    } catch{
-   
-      message.error("Failed to fetch checklist items");
+    } catch {
+      message.error('Failed to fetch checklist items');
     }
-  };
+  }, [checklist.id, dispatch]);
 
   useEffect(() => {
     fetchItems();
-  }, [checklist.id]);
+  }, [fetchItems]);
 
   const handleCreateItem = async () => {
     if (!itemName.trim()) return;
@@ -43,32 +42,32 @@ const Checklist = ({ checklist, cardId, onDelete }) => {
       const response=await createCheckItem(checklist.id, itemName);
 
       dispatch(addItem({
-        checklistId:checklist.id,
-        item:response.data
-      }))
+        checklistId: checklist.id,
+        item: response.data,
+      }));
 
-      setItemName("");
+      setItemName('');
       setIsAddingItem(false);
 
-      message.success("Item added");
+      message.success('Item added');
     } catch {
-      message.error("Failed to create checklist item");
+      message.error('Failed to create checklist item');
     }
   };
 
   const handleToggleItem = async (item) => {
     try {
-      const newState = item.state === "complete" ? "incomplete" : "complete";
+      const newState = item.state === 'complete' ? 'incomplete' : 'complete';
 
       await updateCheckItem(cardId, item.id, newState);
 
       dispatch(updateItem({
-        checklistId:checklist.id,
-        itemId:item.id,
-        state:newState,
-      }))
-    } catch  {
-      message.error("Failed to update checklist item");
+        checklistId: checklist.id,
+        itemId: item.id,
+        state: newState,
+      }));
+    } catch {
+      message.error('Failed to update checklist item');
     }
   };
 
@@ -77,18 +76,18 @@ const Checklist = ({ checklist, cardId, onDelete }) => {
       await deleteCheckItem(checklist.id, itemId);
 
       dispatch(removeItem({
-        checklistId:checklist.id,
-        itemId
-      }))
+        checklistId: checklist.id,
+        itemId,
+      }));
 
-      message.success("Item deleted");
-    } catch  {
-      message.error("Failed to delete checklist item");
+      message.success('Item deleted');
+    } catch {
+      message.error('Failed to delete checklist item');
     }
   };
 
   const completedItems = items.filter(
-    (item) => item.state === "complete",
+      (item) => item.state === 'complete',
   ).length;
 
   const progress =
@@ -110,9 +109,9 @@ const Checklist = ({ checklist, cardId, onDelete }) => {
         <div className="h-2 flex-1 rounded-full bg-gray-300">
           <div
             className={`h-2 rounded-full ${
-              progress === 100 ? "bg-green-500" : "bg-blue-500"
+              progress === 100 ? 'bg-green-500' : 'bg-blue-500'
             }`}
-            style={{ width: `${progress}%` }}
+            style={{width: `${progress}%`}}
           />
         </div>
       </div>
@@ -126,13 +125,13 @@ const Checklist = ({ checklist, cardId, onDelete }) => {
             <div className="flex items-center gap-2">
               <input
                 type="checkbox"
-                checked={item.state === "complete"}
+                checked={item.state === 'complete'}
                 onChange={() => handleToggleItem(item)}
               />
 
               <span
                 className={
-                  item.state === "complete" ? "text-gray-400 line-through" : ""
+                  item.state === 'complete' ? 'text-gray-400 line-through' : ''
                 }
               >
                 {item.name}
@@ -169,7 +168,7 @@ const Checklist = ({ checklist, cardId, onDelete }) => {
                 type="text"
                 onClick={() => {
                   setIsAddingItem(false);
-                  setItemName("");
+                  setItemName('');
                 }}
               >
                 x

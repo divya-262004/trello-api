@@ -1,35 +1,35 @@
-import { Button, Input, message } from "antd";
-import { useEffect, useState } from "react";
-import { getCards, createCard } from "../services/trelloApi";
-import Card from "./Card";
-import { useDispatch, useSelector } from "react-redux";
-import { setCards, addCard } from "../store/slices/cardSlice";
+import {Button, Input, message} from 'antd';
+import {useEffect, useState, useCallback} from 'react';
+import {getCards, createCard} from '../services/trelloApi';
+import Card from './Card';
+import {useDispatch, useSelector} from 'react-redux';
+import {setCards, addCard} from '../store/slices/cardSlice';
 
-const BoardList = ({ list, onDelete }) => {
+const BoardList = ({list, onDelete}) => {
   const dispatch = useDispatch();
 
   const cards = useSelector((state) => state.cards[list.id] || []);
   const [isAddingCard, setIsAddingCard] = useState(false);
-  const [cardName, setCardName] = useState("");
+  const [cardName, setCardName] = useState('');
 
-  const fetchCards = async () => {
+  const fetchCards = useCallback(async () => {
     try {
       const response = await getCards(list.id);
 
       dispatch(
-        setCards({
-          listId: list.id,
-          cards: response.data,
-        }),
+          setCards({
+            listId: list.id,
+            cards: response.data,
+          }),
       );
-    } catch  {
-      message.error("Failed to fetch cards");
+    } catch {
+      message.error('Failed to fetch cards');
     }
-  };
+  }, [dispatch, list.id]);
 
   useEffect(() => {
     fetchCards();
-  }, [list.id]);
+  }, [fetchCards]);
 
   const handleCreateCard = async () => {
     if (!cardName.trim()) return;
@@ -38,17 +38,16 @@ const BoardList = ({ list, onDelete }) => {
       const response =await createCard(list.id, cardName);
 
       dispatch(addCard({
-        listId:list.id,
-        card:response.data
-      }))
+        listId: list.id,
+        card: response.data,
+      }));
 
-      setCardName("");
+      setCardName('');
       setIsAddingCard(false);
 
-      message.success("Card added");
-    // eslint-disable-next-line no-unused-vars
-    } catch  {
-      message.error("Failed to create card");
+      message.success('Card added');
+    } catch {
+      message.error('Failed to create card');
     }
   };
 
@@ -89,7 +88,7 @@ const BoardList = ({ list, onDelete }) => {
               <Button
                 onClick={() => {
                   setIsAddingCard(false);
-                  setCardName("");
+                  setCardName('');
                 }}
               >
                 ✕

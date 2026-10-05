@@ -1,39 +1,39 @@
-import { useParams } from "react-router-dom";
+import {useParams} from 'react-router-dom';
 import {
   getLists,
   createList,
   closeList,
-} from "../services/trelloApi";
-import { useState, useEffect } from "react";
-import BoardList from "../components/BoardList";
-import { Button, Flex, message, Input } from "antd";
-import { useDispatch, useSelector } from "react-redux";
-import { setLists, addList, removeList } from "../store/slices/listSlice";
+} from '../services/trelloApi';
+import {useState, useEffect} from 'react';
+import BoardList from '../components/BoardList';
+import {Button, Flex, message, Input} from 'antd';
+import {useDispatch, useSelector} from 'react-redux';
+import {setLists, addList, removeList} from '../store/slices/listSlice';
 
 const BoardPage = () => {
-  const { boardId } = useParams();
+  const {boardId} = useParams();
 
   const dispatch = useDispatch();
   const lists = useSelector((state) => state.lists[boardId]);
 
   const [isAddingList, setIsAddingList] = useState(false);
-  const [listName, setListName] = useState("");
+  const [listName, setListName] = useState('');
 
   useEffect(() => {
     const fetchLists = async () => {
-      try{
+      try {
         const response = await getLists(boardId);
-      dispatch(
-        setLists({
-          boardId,
-          lists: response.data,
-        }),
-      );
-    }catch{
-      message.error("Failed to fetch lists");
-    }
+        dispatch(
+            setLists({
+              boardId,
+              lists: response.data,
+            }),
+        );
+      } catch {
+        message.error('Failed to fetch lists');
       }
-      
+    };
+
     fetchLists();
   }, [boardId, dispatch]);
 
@@ -44,33 +44,32 @@ const BoardPage = () => {
 
     try {
       const response= await createList(listName, boardId);
-      setListName("");
+      setListName('');
       setIsAddingList(false);
 
-      
+
       dispatch(addList({
         boardId,
-        list:response.data}));
+        list: response.data}));
 
-      message.success("List Added");
+      message.success('List Added');
     } catch {
-      message.error("Failed to Create List");
+      message.error('Failed to Create List');
     }
   };
 
   const handleDeleteList = async (listId) => {
     try {
       await closeList(listId);
-   
-      message.success("List Deleted");
+
+      message.success('List Deleted');
 
       dispatch(removeList({
         boardId,
-        listId
-      }))
-
+        listId,
+      }));
     } catch {
-      message.error("Failed to delete list");
+      message.error('Failed to delete list');
     }
   };
   return (
@@ -102,7 +101,7 @@ const BoardPage = () => {
             <Button
               onClick={() => {
                 setIsAddingList(false);
-                setListName("");
+                setListName('');
               }}
             >
               ✕
@@ -112,12 +111,12 @@ const BoardPage = () => {
       ) : (
         <Button
           size="large"
-          className="w-60! 
-         text-white! 
+          className="w-60!
+         text-white!
          font-semibold
           bg-gray-400!"
           onClick={() => setIsAddingList(true)}
-          
+
         >
           + Add another list
         </Button>
