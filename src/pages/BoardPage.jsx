@@ -60,14 +60,14 @@ const BoardPage = () => {
     <Flex
       gap="middle"
       wrap={false}
-      className="items-start overflow-x-auto hide-scrollbar  !p-5 min-h-screen bg-blue-900"
+      className="items-start overflow-x-auto hide-scrollbar  p-5! min-h-screen bg-blue-900"
     >
       {lists.map((list) => (
         <BoardList key={list.id} list={list} onDelete={handleDeleteList} />
       ))}
 
       {isAddingList ? (
-        <div className="!w-60 shrink-0">
+        <div className="w-60! shrink-0">
           <input
             value={listName}
             onChange={(e) => setListName(e.target.value)}
