@@ -4,9 +4,7 @@ const listSlice=createSlice({
 
   name: 'lists',
 
-  initialState: {
-
-  },
+  initialState: {},
 
   reducers: {
     setLists: (state, action)=>{
