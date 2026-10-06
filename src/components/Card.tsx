@@ -4,8 +4,10 @@ import {
   getCheckLists,
   createCheckList,
   deleteChecklist,
+  deleteCard,
 } from "../services/trelloApi";
 import Checklist from "./Checklist";
+import { removeCard } from "../store/slices/cardSlice";
 import {
   setChecklists,
   addChecklist,
@@ -35,7 +37,7 @@ const Card = ({ card }: { card: TrelloCard }) => {
           checklists: response.data,
         }),
       );
-    } catch  {
+    } catch {
       message.error("Failed to fetch checklists");
     }
   };
@@ -63,7 +65,7 @@ const Card = ({ card }: { card: TrelloCard }) => {
       setIsAddingChecklist(false);
 
       message.success("Checklist created");
-    } catch  {
+    } catch {
       message.error("Failed to create checklist");
     }
   };
@@ -80,18 +82,46 @@ const Card = ({ card }: { card: TrelloCard }) => {
       );
 
       message.success("Checklist deleted");
-    } catch  {
+    } catch {
       message.error("Failed to delete checklist");
+    }
+  };
+
+  const handleDeleteCard = async (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    event.stopPropagation();
+
+    try {
+      await deleteCard(card.id);
+
+      dispatch(
+        removeCard({
+          listId: card.idList,
+          cardId: card.id,
+        }),
+      );
+
+      message.success("Card deleted");
+    } catch {
+      message.error("Failed to delete card");
     }
   };
 
   return (
     <>
       <div
-        className="cursor-pointer rounded-lg bg-white p-3 shadow-sm"
+        className="flex justify-between cursor-pointer rounded-lg bg-white p-3 shadow-sm"
         onClick={() => setIsModalOpen(true)}
       >
-        {card.name}
+        <span>{card.name}</span>
+
+        <Button 
+          type="text" 
+          className="text-gray-500!" 
+          onClick={handleDeleteCard}>
+          ✕
+        </Button>
       </div>
 
       <Modal

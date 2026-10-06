@@ -71,6 +71,10 @@ export const createCard=(listId:string, cardName :string)=>{
     })
 }
 
+export const deleteCard = (cardId: string) => {
+  return trelloApi.delete(`/cards/${cardId}`);
+};
+
 export const createCheckList=(cardId : string, checkListName:string)=>{
     return trelloApi.post<TrelloChecklist>("/checklists",null,{
         params:{

@@ -10,6 +10,12 @@ type AddCardpayload={
     listId:string;
     card:TrelloCard;
 }
+
+type RemoveCardPayload = {
+  listId: string;
+  cardId: string;
+};
+
 const cardSlice=createSlice({
     name:"cards",
     initialState:{} as Record<string, TrelloCard[]>,
@@ -19,9 +25,16 @@ const cardSlice=createSlice({
         },
         addCard:(state, action: PayloadAction<AddCardpayload>)=>{
             state[action.payload.listId].push(action.payload.card);
-        }
+        },
+        removeCard:(state, action: PayloadAction<RemoveCardPayload>) => {
+            const { listId, cardId } = action.payload;
+
+            state[listId] = state[listId].filter(
+                (card) => card.id !== cardId,
+            );
+        },
     },
 })
 
-export const {setCards, addCard}=cardSlice.actions;
+export const {setCards, addCard, removeCard}=cardSlice.actions;
 export default cardSlice.reducer;
